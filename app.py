@@ -345,7 +345,7 @@ if st.session_state.mode == "image":
         height=120,
     )
 
-    if st.button("🖼️ Generate 5 Images"):
+    if st.button("🖼️ Generate  Images"):
         prompt = st.session_state.image_prompt.strip()
         if not prompt:
             st.warning("Please enter an image prompt.")
