@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Download } from "lucide-react";
+
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
@@ -69,7 +69,7 @@ export default function Dashboard() {
     ];
 
     const modes = [
-        { id: "chat", label: "Doubt Session" },
+        { id: "doubt", label: "Doubt Session" },
         { id: "notes", label: "Generate Notes" },
         { id: "questions", label: "Generate Questions" },
         { id: "image", label: "Image Generation" },
@@ -173,9 +173,10 @@ export default function Dashboard() {
 
                 body: JSON.stringify({
                     user_id: user.email,
-                    message: buildPrompt(prompt),
+                    message: prompt,
                     mode: selectedMode,
-                    subtype: selectedNoteType,
+                    questionTypes: selectedNoteType,
+                    note_type: selectedNoteType,
                     history: messages,
                 }),
             });
@@ -353,7 +354,7 @@ export default function Dashboard() {
                                 </h3>
 
                                 <p className="card-desc">
-                                    {selectedMode === "chat" &&
+                                    {selectedMode === "doubt" &&
                                         "Ask doubts and get AI assistance instantly."}
 
                                     {selectedMode === "notes" &&
@@ -367,15 +368,7 @@ export default function Dashboard() {
                                 </p>
                             </div>
 
-                            {messages.length > 0 && (
-                                <button
-                                    className="download-btn"
-                                    onClick={handleExport}
-                                >
-                                    <Download size={18} />
-                                    Download
-                                </button>
-                            )}
+                           
                         </div>
 
                         {selectedMode === "notes" && (

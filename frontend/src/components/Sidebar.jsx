@@ -10,7 +10,7 @@ export default function Sidebar({ history = [], onHistoryClick, selectedMode, on
   };
 
   const navItems = [
-    { id: 'chat', icon: Brain, label: 'Doubt Session' },
+    { id: 'doubt', icon: Brain, label: 'Doubt Session' },
     { id: 'notes', icon: FileText, label: 'Generate Notes' },
     { id: 'questions', icon: HelpCircle, label: 'Generate Questions' },
     { id: 'image', icon: Image, label: 'Image Generation' },

@@ -1,4 +1,3 @@
-from crewai import Agent
 from llm.groq_llm import groq_llm
 
 rag_agent = Agent(

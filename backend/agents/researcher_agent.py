@@ -1,4 +1,3 @@
-from crewai import Agent
 from tools.search_tool import DuckDuckGoSearchTool
 from llm.groq_llm import groq_llm
 

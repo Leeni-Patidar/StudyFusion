@@ -1,4 +1,3 @@
-from crewai.tools import BaseTool
 from duckduckgo_search import DDGS
 
 class DuckDuckGoSearchTool(BaseTool):

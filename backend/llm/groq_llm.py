@@ -1,6 +1,5 @@
 import os
 import litellm
-from crewai import LLM
 from config import LLM_MODEL, env_value
 
 # Load Groq API key from environment variable
