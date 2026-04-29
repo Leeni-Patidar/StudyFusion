@@ -1,7 +1,7 @@
 import { Brain, FileText, GraduationCap, HelpCircle, History, Image, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Sidebar({ history = [], onHistoryClick, selectedMode, onModeChange }) {
+export default function Sidebar({ history = [], onHistoryClick, selectedMode, onModeChange,onNewChat }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -31,6 +31,16 @@ export default function Sidebar({ history = [], onHistoryClick, selectedMode, on
             <span className="text-blue-600">Fusion</span>
           </h1>
         </div>
+      </div>
+
+      {/* New Chat Button */}
+      <div className="mb-4 px-2">
+        <button 
+          className="new-chat-btn"
+          onClick={() => onNewChat && onNewChat()}
+        >
+          + New Chat
+        </button>
       </div>
 
       {/* Navigation */}
