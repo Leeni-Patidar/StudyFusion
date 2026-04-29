@@ -2,63 +2,89 @@ import os
 import requests
 import time
 
-HF_TOKEN=os.getenv("HF_TOKEN")
+HF_TOKEN = os.getenv("HF_TOKEN")
 
-MODEL=os.getenv(
-   "HF_IMAGE_MODEL",
-   "stabilityai/stable-diffusion-2"
-)
+API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
 
-API_URL=f"https://api-inference.huggingface.co/models/{MODEL}"
-
-HEADERS={
- "Authorization":f"Bearer {HF_TOKEN}"
+HEADERS = {
+    "Authorization": f"Bearer {HF_TOKEN}",
+    "Content-Type": "application/json"
 }
 
 
-def generate_hf_images(prompt,count=4):
+def generate_hf_images(prompt, count=5):
 
     if not HF_TOKEN:
-        raise Exception(
-           "HF token missing"
-        )
+        raise Exception("HF token missing")
 
     images=[]
 
-    for _ in range(count):
+    variations = [
+        "diagram style",
+        "realistic illustration",
+        "3d educational rendering",
+        "infographic style",
+        "labeled scientific drawing"
+    ]
 
-        r=requests.post(
+    for i in range(count):
+
+        varied_prompt = (
+            f"{prompt}, "
+            f"{variations[i % len(variations)]}, "
+            f"unique composition, different angle"
+        )
+
+        r = requests.post(
             API_URL,
             headers=HEADERS,
             json={
-               "inputs":prompt,
-               "options":{
-                  "wait_for_model":True
-               }
+                "inputs": varied_prompt
             },
-            timeout=180
+            timeout=300
         )
 
-
-        if r.status_code!=200:
+        if r.status_code != 200:
             raise Exception(
-               f"HF Error {r.status_code}: {r.text}"
+                f"HF Error {r.status_code}: {r.text}"
             )
 
-
-        if "image" not in r.headers.get(
-             "content-type",""
-        ):
-            raise Exception(
-              "Model returned non-image response"
-            )
-
-
-        images.append(
-            r.content
-        )
+        images.append(r.content)
 
         time.sleep(1)
 
+    return images
+
+    if not HF_TOKEN:
+        raise Exception("HF token missing")
+
+    images = []
+
+    for _ in range(count):
+
+        r = requests.post(
+            API_URL,
+            headers=HEADERS,
+            json={
+                "inputs": prompt
+            },
+            timeout=300
+        )
+
+        if r.status_code != 200:
+            raise Exception(
+                f"HF Error {r.status_code}: {r.text}"
+            )
+
+        if "image" not in r.headers.get(
+            "content-type",""
+        ):
+            raise Exception(
+                f"Unexpected response: {r.text}"
+            )
+
+        images.append(r.content)
+
+        time.sleep(1)
 
     return images

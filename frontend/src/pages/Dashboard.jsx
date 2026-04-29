@@ -7,8 +7,10 @@ import "../styles.css";
 
 const API_URL = "http://localhost:8000";
 
+
 export default function Dashboard() {
     const navigate = useNavigate();
+    const [previewImage, setPreviewImage] = useState(null);
 
     const [user] = useState(() => {
         const storedUser = localStorage.getItem("user");
@@ -195,8 +197,12 @@ export default function Dashboard() {
                 },
                 {
                     role: "assistant",
-                    text: data.result,
-                },
+                    text:
+                        selectedMode === "image"
+                            ? "Images generated successfully"
+                            : (data.result || ""),
+                    images: data.images || []
+                }
             ];
 
             setMessages(updated);
@@ -292,8 +298,10 @@ export default function Dashboard() {
         }
     };
 
-    const formatResponse = (text) => {
-        return text.split("\n").map((line, index) => {
+    const formatResponse = (text = "") => {
+        if (!text) return null;
+
+        return String(text).split("\n").map((line, index) => {
 
             if (line.startsWith("# ")) {
                 return (
@@ -322,14 +330,11 @@ export default function Dashboard() {
                 );
             }
 
-            return line.trim() ? (
-                <p key={index}>{line}</p>
-            ) : (
-                <br key={index} />
-            );
+            return line.trim()
+                ? <p key={index}>{line}</p>
+                : <br key={index} />
         });
     };
-
     if (!user) return null;
 
     return (
@@ -368,7 +373,7 @@ export default function Dashboard() {
                                 </p>
                             </div>
 
-                           
+
                         </div>
 
                         {selectedMode === "notes" && (
@@ -475,7 +480,27 @@ export default function Dashboard() {
                                         </strong>
 
                                         <div className="formatted-output">
-                                            {formatResponse(msg.text)}
+
+                                            {msg.images?.length ? (
+                                                <div className="image-grid">
+
+                                                    {msg.images.map((img, i) => (
+                                                        <img
+                                                            key={i}
+                                                            src={`data:image/png;base64,${img}`}
+                                                            alt="generated"
+                                                            className="generated-image"
+                                                            onClick={() => setPreviewImage(
+                                                                `data:image/png;base64,${img}`
+                                                            )}
+                                                        />
+                                                    ))}
+
+                                                </div>
+                                            ) : (
+                                                formatResponse(msg.text)
+                                            )}
+
                                         </div>
                                     </div>
                                 ))}
@@ -509,6 +534,31 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
+            {previewImage && (
+                <div
+                    className="image-preview-overlay"
+                    onClick={() => setPreviewImage(null)}
+                >
+                    <div
+                        className="image-preview-box"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className="close-preview"
+                            onClick={() => setPreviewImage(null)}
+                        >
+                            ✕
+                        </button>
+
+                        <img
+                            src={previewImage}
+                            alt="Preview"
+                            className="preview-large"
+                        />
+
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
