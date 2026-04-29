@@ -1,0 +1,15 @@
+crewai
+langchain
+duckduckgo-search
+python-dotenv
+requests
+python-docx
+reportlab
+bcrypt
+litellm
+huggingface_hub
+fastapi
+httpx
+pydantic-settings
+email-validator
+uvicorn
