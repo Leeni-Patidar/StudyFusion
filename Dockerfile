@@ -1,5 +1,5 @@
 # ---------- FRONTEND BUILD ----------
-FROM node:20 as frontend-build
+FROM node:20-alpine as frontend-build
 
 WORKDIR /app/frontend
 COPY frontend/ .
@@ -7,16 +7,18 @@ RUN npm install
 RUN npm run build
 
 # ---------- BACKEND ----------
-FROM python:3.10
+FROM python:3.10-slim
 
 WORKDIR /app
 
+# copy backend
 COPY backend/ ./backend
 
-# install python deps
-RUN pip install --no-cache-dir fastapi uvicorn
+# install python dependencies
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# copy frontend build into backend
+# copy frontend build
 COPY --from=frontend-build /app/frontend/dist ./backend/static
 
 WORKDIR /app/backend
