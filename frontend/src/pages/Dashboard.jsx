@@ -5,7 +5,7 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import "../styles.css";
 
-const API_URL = "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 export default function Dashboard() {
