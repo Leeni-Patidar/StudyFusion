@@ -4,6 +4,8 @@ import hashlib
 import base64
 import uvicorn
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from typing import Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,7 +23,14 @@ from utils.history_manager import save_history, load_history
 from tools.docx_export import export_docx
 
 app = FastAPI(title="StudyFusion API")
+frontend_path = os.path.join(os.path.dirname(__file__), "static")
 
+# Serve assets (JS, CSS)
+app.mount(
+    "/assets",
+    StaticFiles(directory=os.path.join(frontend_path, "assets")),
+    name="assets"
+)
 
 # ================= CORS =================
 app.add_middleware(
@@ -410,10 +419,8 @@ def export_document(req: ChatRequest):
 # ================= HEALTH =================
 
 @app.get("/")
-def root():
-    return {
-        "message": "StudyFusion API running"
-    }
+def serve_frontend():
+    return FileResponse(os.path.join(frontend_path, "index.html"))
 
 
 # ================= RUN =================
