@@ -1,5 +1,5 @@
 # ---------- FRONTEND BUILD ----------
-FROM node:18 as frontend-build
+FROM node:20 as frontend-build
 
 WORKDIR /app/frontend
 COPY frontend/ .
